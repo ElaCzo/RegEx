@@ -247,4 +247,50 @@ class RegExTree {
         if (root==RegEx.DOT) return ".";
         return Character.toString((char)root);
     }
+    private int[][] mergeConcat(int taille1, int[][] t1, int taille2, int[][] t2){
+        int res[][] = int[taille1+taille2][130];
+
+
+        int iajout =0;
+        int numero =1;
+        int i, j;
+        for(i=0; i<taille1; i++) {
+            for (j = 0; j < 130; j++) {
+                res[i][j] = t1[i][j];
+                if(t1[i][j]>numero)
+                    numero=t1[i][j];
+            }
+            if(t1[i][FINAL]==1) {
+                res[i][FINAL] = 0;
+                //res[]; continuer ici il manque à créer les transitions nouvelles
+            }
+        }
+
+        for(i=0; i<taille2; i++)
+            for (j = 0; j < 130; j++)
+                if(t2[i][j]>0)
+                    res[i+taille1][j] = t2[i][j]+numero;
+                // ici aussi
+    }
+
+    private int INITIAL=127;
+    private int FINAL=128;
+
+    public int[][] regExTreeToAutomata(){
+        int numero =2;
+
+        if (root==RegEx.CONCAT) return mergeConcat();
+        else if (root==RegEx.ETOILE) return mergeEtoile();
+        else if (root==RegEx.ALTERN) return mergeAltern();
+        else {
+            int taille=2;
+            int[][] transitions= new int[2][130];
+
+            t[0][root]=numero++;
+            t[0][INITIAL]=1;
+            t[1][FINAL]=1;
+        }
+
+        return transitions;
+    }
 }
