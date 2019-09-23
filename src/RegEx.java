@@ -20,9 +20,53 @@ public class RegEx {
     //CONSTRUCTOR
     public RegEx(){}
 
+
+    public static Etat creeAutomateExempleEtape5(){
+        Etat r = new Etat(true, false);
+        Etat n1 = new Etat(false, false);
+        Etat n2 = new Etat(false, false);
+        Etat n3 = new Etat(false, false);
+        Etat n4 = new Etat(false, false);
+        Etat n5 = new Etat(false, false);
+        Etat etatFinal = new Etat(false, true);
+
+        Transition transitionS = new Transition((int)'S', n1);
+        r.addTransition(transitionS);
+
+        Transition transitionA = new Transition((int)'a', n2);
+        Transition transitionR = new Transition((int)'r', n3);
+        Transition transitionG = new Transition((int)'g', n4);
+        n1.addTransition(transitionA);
+        n1.addTransition(transitionR);
+        n1.addTransition(transitionG);
+
+        Transition transitionEsp1 = new Transition(-1, n1);
+        Transition transitionO1 = new Transition((int)'o', n5);
+        n2.addTransition(transitionEsp1);
+        n2.addTransition(transitionO1);
+
+        Transition transitionEsp2 = new Transition(-1, n1);
+        Transition transitionO2 = new Transition((int)'o', n5);
+        n3.addTransition(transitionEsp2);
+        n3.addTransition(transitionO2);
+
+        Transition transitionEsp3 = new Transition(-1, n1);
+        Transition transitionO3 = new Transition((int)'o', n5);
+        n4.addTransition(transitionEsp3);
+        n4.addTransition(transitionO3);
+
+        Transition transitionO4 = new Transition((int)'o', n5);
+        n1.addTransition(transitionO4);
+
+        Transition transitionN = new Transition((int)'n', etatFinal);
+        n5.addTransition(transitionN);
+
+        return r;
+    }
+
     //MAIN
     public static void main(String arg[]) {
-        System.out.println("Welcome to Bogota, Mr. Thomas Anderson.");
+        /*System.out.println("Welcome to Bogota, Mr. Thomas Anderson.");
         if (arg.length!=0) {
             regEx = arg[0];
         } else {
@@ -49,7 +93,14 @@ public class RegEx {
 
         System.out.println("  >> ...");
         System.out.println("  >> Parsing completed.");
-        System.out.println("Goodbye Mr. Anderson.");
+        System.out.println("Goodbye Mr. Anderson."); */
+
+        // crée un automate orienté objet sur S(a|g|r)*on
+        creeAutomateExempleEtape5();
+
+        // crée un tableau représentant l'automate de S(a|g|r)*on
+        // + minimisation
+        exempleEtape5();
     }
 
     //FROM REGEX TO SYNTAX TREE
@@ -223,7 +274,55 @@ public class RegEx {
         subTrees.add(dotBCEtoile);
         return new RegExTree(ALTERN, subTrees);
     }
+
+    public static void exempleEtape5(){
+        System.out.println("S(a|g|r)*on");
+        int res[][] = new int[7][8];
+
+        res[0][0]=2;res[0][6]=1;
+        res[1][1]=3;res[1][2]=4;res[1][3]=5;res[1][4]=6;
+        res[2][1]=2;res[2][2]=2;res[2][3]=2;res[2][4]=6;
+        res[3][1]=2;res[3][2]=2;res[3][3]=2;res[3][4]=6;
+        res[4][1]=2;res[4][2]=2;res[4][3]=2;res[4][4]=6;
+        res[5][5]=7;
+        res[6][7]=1;
+
+        System.out.println("----------------");
+        System.out.println("S a r g o n I F");
+        System.out.println("----------------");
+        for(int i=0; i<7; i++) {
+            for (int j = 0; j < 8; j++)
+                System.out.print(res[i][j] + " ");
+            System.out.println();
+        }
+
+
+        System.out.println();
+        System.out.println("Minimisé");
+
+        int minimise[][] = new int[5][8];
+
+        minimise[0][0]=2;minimise[0][6]=1;
+        minimise[1][1]=3;minimise[1][2]=3;minimise[1][3]=3;minimise[1][4]=4;
+        minimise[2][1]=2;minimise[2][2]=2;minimise[2][3]=2;minimise[2][4]=4;
+        minimise[3][5]=5;
+        minimise[4][7]=1;
+
+        System.out.println("----------------");
+        System.out.println("S a r g o n I F");
+        System.out.println("----------------");
+        for(int i=0; i<5; i++) {
+            for (int j = 0; j < 8; j++)
+                System.out.print(minimise[i][j] + " ");
+            System.out.println();
+        }
+
+
+        System.out.println();
+    }
 }
+
+
 
 //UTILITARY CLASS
 class RegExTree {
@@ -247,9 +346,8 @@ class RegExTree {
         if (root==RegEx.DOT) return ".";
         return Character.toString((char)root);
     }
-    private int[][] mergeConcat(int taille1, int[][] t1, int taille2, int[][] t2){
-        int res[][] = int[taille1+taille2][130];
-
+    /*private int[][] mergeConcat(int taille1, int[][] t1, int taille2, int[][] t2){
+        int[][] res = new int[taille1+taille2][130];
 
         int iajout =0;
         int numero =1;
@@ -271,12 +369,14 @@ class RegExTree {
                 if(t2[i][j]>0)
                     res[i+taille1][j] = t2[i][j]+numero;
                 // ici aussi
+
+        return res;
     }
 
     private int INITIAL=127;
-    private int FINAL=128;
+    private int FINAL=128;*/
 
-    public int[][] regExTreeToAutomata(){
+    /*public int[][] regExTreeToAutomata(){
         int numero =2;
 
         if (root==RegEx.CONCAT) return mergeConcat();
@@ -292,5 +392,5 @@ class RegExTree {
         }
 
         return transitions;
-    }
+    }*/
 }
